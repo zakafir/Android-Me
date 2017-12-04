@@ -26,9 +26,14 @@ import android.widget.ImageView;
 
 import com.st00.afir.android_me.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BodyPartFragment extends Fragment {
+
+    private static final String LIST_OF_IMAGES = "list_images";
+    private static final String LIST_INDEX = "list_index";
+
 
     // Tag for logging
     private static final String TAG = "BodyPartFragment";
@@ -49,17 +54,34 @@ public class BodyPartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        if(savedInstanceState != null){
+            mImageIds = savedInstanceState.getIntegerArrayList(LIST_OF_IMAGES);
+            mListIndex = savedInstanceState.getInt(LIST_INDEX);
+        }
         // Inflate the Android-Me fragment layout
         View rootView = inflater.inflate(R.layout.fragment_body_part, container, false);
 
         // Get a reference to the ImageView in the fragment layout
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.body_part_image_view);
+        final ImageView imageView = (ImageView) rootView.findViewById(R.id.body_part_image_view);
 
         // If a list of image ids exists, set the image resource to the correct item in that list
         // Otherwise, create a Log statement that indicates that the list was not found
         if(mImageIds != null){
             // Set the image resource to the list item at the stored index
             imageView.setImageResource(mImageIds.get(mListIndex));
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListIndex < mImageIds.size()-1){
+                        mListIndex++;
+                    }else{
+                        mListIndex = 0;
+                    }
+                    imageView.setImageResource(mImageIds.get(mListIndex));
+                }
+            });
+
         } else {
             Log.v(TAG, "This fragment has a null list of image id's");
         }
@@ -79,4 +101,10 @@ public class BodyPartFragment extends Fragment {
         mListIndex = index;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putIntegerArrayList(LIST_OF_IMAGES, (ArrayList<Integer>) mImageIds);
+        outState.putInt(LIST_INDEX,mListIndex);
+    }
 }
