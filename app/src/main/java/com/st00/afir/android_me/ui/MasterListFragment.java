@@ -47,7 +47,7 @@ public class MasterListFragment extends Fragment {
 
         MasterListAdapter masterListAdapter = new MasterListAdapter(this.getContext(), AndroidImageAssets.getAll());
 
-        final GridView gridView = (GridView) rootView.findViewById(R.id.gridViewAndroidImages);
+        final GridView gridView = (GridView) rootView.findViewById(R.id.images_grid_view);
 
         gridView.setAdapter(masterListAdapter);
 
@@ -58,7 +58,7 @@ public class MasterListFragment extends Fragment {
             }
         });
 
-        return gridView;
+        return rootView;
 
     }
 
