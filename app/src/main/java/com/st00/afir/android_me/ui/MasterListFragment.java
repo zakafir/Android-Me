@@ -1,11 +1,13 @@
 package com.st00.afir.android_me.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.st00.afir.android_me.R;
@@ -17,8 +19,24 @@ import com.st00.afir.android_me.data.AndroidImageAssets;
 
 public class MasterListFragment extends Fragment {
 
+    private OnImageClickListener mCallback;
+
     public MasterListFragment() {
 
+    }
+
+    public interface OnImageClickListener{
+        void onImageSelected(int position);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        try{
+            mCallback = (OnImageClickListener) context;
+        } catch (ClassCastException c){
+            throw new ClassCastException(context.toString());
+        }
+        super.onAttach(context);
     }
 
     @Nullable
@@ -32,6 +50,13 @@ public class MasterListFragment extends Fragment {
         final GridView gridView = (GridView) rootView.findViewById(R.id.gridViewAndroidImages);
 
         gridView.setAdapter(masterListAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCallback.onImageSelected(position);
+            }
+        });
 
         return gridView;
 
